@@ -1,0 +1,66 @@
+@use "sass:math" as math;
+
+@mixin hexagonX($size, $horizontal: false) {
+  width: $size;
+  height: $size;
+  background-color: var(--color-bg, transparent);
+  @if $horizontal {
+    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+  } @else {
+    clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+  }
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  background-color: #1ca3ec;
+  background-image: url('../public/assets/water.jpeg');
+  background-size: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app {
+  margin: 0 auto;
+}
+
+.island {
+  // --color-bg: #c9b360;
+  @include hexagonX(78vmin, true);
+  height: 74vmin;
+  position: relative;
+}
+
+.zone {
+  position: absolute;
+  background-size: 16vmin;
+  
+  &--wood {
+    background-image: url('../public/assets/wood.jpg');
+  }
+
+  &--wheat {
+    background-image: url('../public/assets/wheat.jpg');
+  }
+
+  &--iron {
+    background-image: url('../public/assets/iron.jpg');
+  }
+
+  &--wool {
+    background-image: url('../public/assets/wool.jpg');
+  }
+
+  &--clay {
+    background-image: url('../public/assets/clay.jpg');
+  }
+
+  &--empty {
+    background-image: url('../public/assets/desert.jpg');
+  }
+
+  @include hexagonX(16vmin);
+}
+
