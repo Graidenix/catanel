@@ -6,7 +6,8 @@ const FACE_FLICKER_INTERVAL = 70;
 export const HISTORY_SIZE = 6;
 
 const useDiceRoll = () => {
-    const [dice, setDice] = useState<DicePair>(rollDice);
+    // null = no current roll: blank dice, nothing highlighted
+    const [dice, setDice] = useState<DicePair | null>(null);
     const [rolling, setRolling] = useState(false);
     const [history, setHistory] = useState<{id: number, dice: DicePair}[]>([]);
     const nextId = useRef(0);
@@ -15,9 +16,10 @@ const useDiceRoll = () => {
         if (!rolling) return;
         const flicker = setInterval(() => setDice(rollDice()), FACE_FLICKER_INTERVAL);
         const stop = setTimeout(() => {
-            const final = rollDice();
-            setDice(final);
-            setHistory(prev => [{id: nextId.current++, dice: final}, ...prev].slice(0, HISTORY_SIZE));
+            const entry = {id: nextId.current++, dice: rollDice()};
+            setDice(entry.dice);
+            // keep the updater pure: StrictMode may call it twice
+            setHistory(prev => [entry, ...prev].slice(0, HISTORY_SIZE));
             setRolling(false);
         }, ROLL_DURATION);
         return () => {
@@ -27,8 +29,9 @@ const useDiceRoll = () => {
     }, [rolling]);
 
     const roll = useCallback(() => setRolling(true), []);
+    const clear = useCallback(() => setDice(null), []);
 
-    return {dice, rolling, history, roll};
+    return {dice, rolling, history, roll, clear};
 };
 
 export default useDiceRoll;

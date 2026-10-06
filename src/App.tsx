@@ -11,13 +11,16 @@ import {diceSum} from './utils/dice';
 
 const App = () => {
     const {settings, updateSettings} = useSettings();
-    const {tiles, regenerate} = useBoard(settings.mode);
+    const {tiles, regenerate} = useBoard({mode: settings.mode, balance: settings.balance});
     const [settingsOpen, setSettingsOpen] = useState(false);
-    const {dice, rolling, history, roll} = useDiceRoll();
-    const rolled = !settings.showDice || rolling || history.length === 0 ? null : diceSum(dice);
+    const {dice, rolling, history, roll, clear} = useDiceRoll();
+    const rolled = !settings.showDice || rolling || dice === null ? null : diceSum(dice);
 
     const changeSettings = (patch: Partial<Settings>) => {
-        if (patch.mode && patch.mode !== settings.mode) regenerate(patch.mode);
+        const next = {...settings, ...patch};
+        if (next.mode !== settings.mode || next.balance !== settings.balance) {
+            regenerate({mode: next.mode, balance: next.balance});
+        }
         updateSettings(patch);
     };
 
@@ -31,7 +34,7 @@ const App = () => {
                 </div>
                 <div className="header__actions">
                     {settings.showMap && (
-                        <button className="button" onClick={() => regenerate(settings.mode)}>New map</button>
+                        <button className="button" onClick={() => regenerate({mode: settings.mode, balance: settings.balance})}>New map</button>
                     )}
                     <button
                         className="button button--settings"
@@ -51,7 +54,7 @@ const App = () => {
                     </div>
                 )}
                 {settings.showDice && (
-                    <DicePanel dice={dice} rolling={rolling} history={history} onRoll={roll}/>
+                    <DicePanel dice={dice} rolling={rolling} history={history} onRoll={roll} onClear={clear}/>
                 )}
             </main>
             <SettingsDialog

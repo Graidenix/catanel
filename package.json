@@ -8,7 +8,8 @@
     "start": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "oxlint"
   },
   "dependencies": {
     "lucide-react": "^1.52.0",
@@ -23,6 +24,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "jsdom": "^30.1.2",
+    "oxlint": "^1.87.0",
     "sass": "^1.105.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.2",

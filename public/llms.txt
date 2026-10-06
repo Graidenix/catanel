@@ -4,9 +4,10 @@
 
 - 3–4 players: generates a standard 19-hex map with 4 wood, 4 wool, 4 wheat, 3 clay (brick), 3 iron (ore) and 1 desert.
 - 5–6 players: generates the 30-hex extension map with 6 wood, 6 wool, 6 wheat, 5 clay, 5 iron, 2 deserts and 28 number tokens.
-- Places the number tokens (2–12, no 7) so that the high-probability 6 and 8 are never adjacent.
+- Balanced mode (default): equal numbers, 6 & 8, and 2 & 12 are never adjacent; no 3+ same-resource tiles clump together; every resource gets a fair share of the high-probability numbers.
+- Random mode: plain shuffle that only keeps 6 and 8 apart (the official setup rule).
 - The robber starts on the desert.
-- Built-in two-dice roller shows the total, flags a 7 (robber moves), highlights tiles matching the roll, and keeps the last 6 rolls.
+- Built-in two-dice roller shows the total, flags a 7 (robber moves), highlights tiles matching the roll, can be cleared to see the plain map, and keeps the last 6 rolls.
 - "New map" reshuffles the board instantly. No sign-up, no install, works on mobile.
 
 ## Pages

@@ -1,21 +1,31 @@
 import {useEffect, useState} from 'react';
-import {generateBoard, isValidBoard, type Tile} from '../utils/board';
-import type {PlayerMode} from '../utils/constants';
+import {followsRules, generateBoard, isValidBoard, type Tile} from '../utils/board';
+import type {BalanceMode, PlayerMode} from '../utils/constants';
 
 const STORAGE_KEY = 'catanel:board';
 
-const loadBoard = (mode: PlayerMode): Tile[] => {
+interface BoardOptions {
+    mode: PlayerMode;
+    balance: BalanceMode;
+}
+
+const loadBoard = ({mode, balance}: BoardOptions): Tile[] => {
     try {
         const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
-        if (stored?.mode === mode && isValidBoard(mode, stored.tiles)) return stored.tiles;
+        if (
+            stored?.mode === mode
+            && stored.balance === balance
+            && isValidBoard(mode, stored.tiles)
+            && followsRules(stored.tiles, balance)
+        ) return stored.tiles;
     } catch {
         // unreadable storage — fall through to a fresh board
     }
-    return generateBoard(mode);
+    return generateBoard(mode, balance);
 };
 
-const useBoard = (mode: PlayerMode) => {
-    const [board, setBoard] = useState(() => ({mode, tiles: loadBoard(mode)}));
+const useBoard = (options: BoardOptions) => {
+    const [board, setBoard] = useState(() => ({...options, tiles: loadBoard(options)}));
 
     useEffect(() => {
         try {
@@ -25,7 +35,7 @@ const useBoard = (mode: PlayerMode) => {
         }
     }, [board]);
 
-    const regenerate = (nextMode: PlayerMode) => setBoard({mode: nextMode, tiles: generateBoard(nextMode)});
+    const regenerate = ({mode, balance}: BoardOptions) => setBoard({mode, balance, tiles: generateBoard(mode, balance)});
 
     return {tiles: board.tiles, regenerate};
 };
