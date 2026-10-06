@@ -1,9 +1,8 @@
-import React from 'react';
+import { expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders dice', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getAllByTitle(/^[1-6]$/)).toHaveLength(2);
 });

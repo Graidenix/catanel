@@ -1,18 +1,26 @@
-const size = 14;
+import type {CSSProperties} from 'react';
+import NumberToken from './NumberToken';
+import type {Tile} from '../utils/board';
 
-type ResourceType = 'empty' | 'iron' | 'clay' | 'wood' | 'wool' | 'wheat';
-
-const zonePos = ({x,y}: {x: number, y: number}): {top: string, left: string} => {
-    return {
-        top: 6.5 + y * size * 0.83 + 'vmin',
-        left: 3.4 + ((y % 2 ? 0.5 : 0) + x) * size + 'vmin'
-    }
+interface ZoneProps {
+    tile: Tile;
+    style: CSSProperties;
+    highlighted: boolean;
+    showToken: boolean;
 }
 
-function Zone(props: React.PropsWithChildren<{x: number, y: number, resource: ResourceType}>) {
-    return ( 
-        <div className={`zone zone--${props.resource}`} style={zonePos(props)} />
-     );
-}
+const Zone = ({tile, style, highlighted, showToken}: ZoneProps) => (
+    <div
+        className={`zone${highlighted ? ' zone--highlighted' : ''}`}
+        style={style}
+        title={tile.resource === 'empty' ? 'desert' : tile.resource}
+    >
+        <div className="zone__hex">
+            <div className={`zone__face zone__face--${tile.resource}`}/>
+        </div>
+        {showToken && tile.number !== null && <NumberToken value={tile.number}/>}
+        {tile.robber && <div className="robber"/>}
+    </div>
+);
 
 export default Zone;

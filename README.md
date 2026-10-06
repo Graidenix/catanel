@@ -1,46 +1,90 @@
-# Getting Started with Create React App
+<div align="center">
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 🎲 Catanel
 
-## Available Scripts
+**A Catan-inspired island generator and dice roller, made for phones and desktop.**
 
-In the project directory, you can run:
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-7-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Sass](https://img.shields.io/badge/Sass-SCSS-CC6699?logo=sass&logoColor=white)
 
-### `yarn start`
+</div>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## About
 
-### `yarn test`
+Catanel generates a random 19-hex island and rolls two dice to highlight the tiles matching the total. It's built with React and TypeScript and runs entirely in the browser. Maps and roll history reset when you reload the page.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `yarn build`
+- 🏝️ **Random islands:** four wood, wool and wheat tiles each, three iron and clay tiles each, and one desert, arranged in five rows.
+- 🔢 **Number tokens:** the standard 18 tokens, with red 6s and 8s and probability dots beneath each number. The generator retries number placement to keep 6s and 8s apart.
+- 🎲 **Animated dice:** two six-sided dice tumble and change faces before revealing their total. Matching tiles glow after the roll finishes.
+- 🦹 **Robber reminder:** rolling a 7 displays “Robber moves!”; the board shows a robber marker on the desert.
+- 📜 **Recent rolls:** the latest six totals appear in the dice panel, newest first.
+- 🎨 **Textured design:** resource landscapes, an ocean background, parchment panels, and Cinzel and Inter fonts.
+- 📱 **Responsive layout:** the dice panel sits beside the island on desktop and below it on smaller screens. Dice and tile animations respect your system's reduced-motion setting.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Controls
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+| Action | Control |
+| ------ | ------- |
+| Generate another island | **New map** |
+| Roll both dice | **Roll dice** |
+| See a tile's resource | Hover over the tile |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Generating a new map keeps the current dice and roll history. The roll button is disabled while the dice are rolling.
 
-### `yarn eject`
+## Getting started
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Requires [Node.js](https://nodejs.org/) compatible with Vite 8 and [pnpm](https://pnpm.io/).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```sh
+git clone git@github.com:Graidenix/catanel.git
+cd catanel
+pnpm install
+pnpm dev
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Open the URL Vite prints, normally **http://localhost:3001**.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Scripts
 
-## Learn More
+| Command | What it does |
+| ------- | ------------ |
+| `pnpm dev` | Start the dev server with hot reload |
+| `pnpm start` | Alias for the dev server |
+| `pnpm build` | Type-check, then build to `build/` |
+| `pnpm preview` | Serve the production build locally |
+| `pnpm test` | Run Vitest in watch mode |
+| `pnpm test --run` | Run tests once |
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Project structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```text
+src/
+├── index.tsx        # entry: mounts the app inside an error boundary
+├── App.tsx          # map state and board/dice layout
+├── App.test.tsx     # rendering smoke test
+├── components/      # Board, Zone, NumberToken, Dice, DicePanel, ErrorBoundary
+├── hooks/           # useDiceRoll: animation timing and recent rolls
+├── utils/           # board generation, resource/token constants, dice, shuffle
+├── setupTests.ts    # testing-library setup
+└── index.scss       # layout, textures, tokens and animations
+public/              # resource textures, favicon, icons and manifest
+index.html           # HTML entry and font loading
+vite.config.ts       # dev server, build output and Vitest configuration
+```
+
+## How it works
+
+- **Board generation:** resources are shuffled across 19 fixed hex positions. Number tokens are shuffled independently, skipping the desert. If any 6s or 8s share an edge, placement is retried up to 500 times; the final attempt is returned even if adjacent hot numbers remain.
+- **Hex layout:** doubled column coordinates identify neighbors and position tiles as percentages of the board, so the island scales with the viewport.
+- **Dice lifecycle:** `useDiceRoll` changes faces every 70 ms during a 600 ms roll, then records the final pair. Its effect cleans up both timers when the component unmounts.
+- **Derived highlighting:** the completed dice total is passed to the board, which highlights matching number tokens. Highlighting pauses during a roll and stays off until the first roll completes.
+
+## Credits
+
+Inspired by the board game CATAN. The display and body fonts are Cinzel and Inter, loaded through Google Fonts.
